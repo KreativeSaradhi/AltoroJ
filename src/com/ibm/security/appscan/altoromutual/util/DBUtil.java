@@ -421,6 +421,18 @@ public class DBUtil {
 			return transactions.toArray(new Transaction[transactions.size()]); 
 	}
 
+	// E2E TEST 2026-10-07: deliberately vulnerable (string-concatenated SQL). Do not merge.
+	public static ArrayList<String> findUsersByLastName(String lastName) throws SQLException {
+		Connection connection = getConnection();
+		Statement statement = connection.createStatement();
+		ResultSet rs = statement.executeQuery("SELECT USER_ID FROM PEOPLE WHERE LAST_NAME = '" + lastName + "'");
+		ArrayList<String> ids = new ArrayList<String>();
+		while (rs.next()) {
+			ids.add(rs.getString("USER_ID"));
+		}
+		return ids;
+	}
+
 	public static String[] getBankUsernames() {
 		
 		try {
