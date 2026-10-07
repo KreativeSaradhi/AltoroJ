@@ -44,6 +44,16 @@ public class SurveyServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String step = (request.getParameter("step"));
+		// E2E TEST 2026-10-07: user-controlled input flows into concatenated SQL. Do not merge.
+		String lastName = request.getParameter("lastName");
+		if (lastName != null) {
+			try {
+				response.getWriter().println(com.ibm.security.appscan.altoromutual.util.DBUtil.findUsersByLastName(lastName));
+			} catch (java.sql.SQLException e) {
+				response.sendError(500);
+			}
+			return;
+		}
 		
 		String content = null;
 		String previousStep = null;
